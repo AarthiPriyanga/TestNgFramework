@@ -1,6 +1,8 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 
 import base.BaseClass;
 
@@ -11,8 +13,12 @@ public class MenuPage extends BaseClass{
 	protected By salesLink = By.xpath("//span[@part='formatted-rich-text']/p[text()='Sales']");
 	protected By logoutLink = By.xpath("//a[text()='Log Out']");
 	protected By userImg=By.xpath("(//span[@class='uiImage']/parent::div[@data-aura-class='forceEntityIcon'])[1]");
-
+	protected By commerce = By.xpath("//p[text()='Commerce']");
+    private WebDriver driver;
 	
+	public MenuPage(WebDriver driver) {
+		this.driver = driver;
+	}
 	public MenuPage clickOnAppLauncher() {
 		driver.findElement(applauncherIcon).click();
 		try {
@@ -25,10 +31,18 @@ public class MenuPage extends BaseClass{
 	}
 	
 
-//	public SalesPage clickOnSales() { 
-//		oWrap.click(driver.findElement(salesLink), "Sales Link");
-//		return new SalesPage(driver,node);
-//	}
+	public SalesPage clickOnSales() { 
+		Actions oAction = new Actions(driver);
+		oAction.moveToElement(driver.findElement(commerce)).click().perform();
+		driver.findElement(salesLink).click();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new SalesPage(driver);
+	}
 	
 	public MenuPage clickOnViewAll() {
 		driver.findElement(viewAllLink).click();
@@ -54,7 +68,7 @@ public class MenuPage extends BaseClass{
 			e.printStackTrace();
 		}
 		driver.findElement(logoutLink).click();
-		return new LoginPage();
+		return new LoginPage(driver);
 	}
 
 }

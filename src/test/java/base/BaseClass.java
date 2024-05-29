@@ -8,13 +8,18 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+
+import util.ExcelReader;
+import util.PropertyReader;
 
 public class BaseClass {
 	
-	public static WebDriver driver;
-	public String sBrowser = "Safari"; 
-	public String sUrl = "https://login.salesforce.com/";
-	
+	public WebDriver driver;
+	public String fileName = "Environment";
+	public String sBrowser = PropertyReader.readDataFromPropertyFile(fileName, "Browser");
+	public String sUrl = PropertyReader.readDataFromPropertyFile(fileName, "URL");
+	public String excelFileName ="";
 	@BeforeClass
 	public  void invokeBrowser() {
 		switch (sBrowser.toLowerCase()) {
@@ -45,5 +50,12 @@ public class BaseClass {
 	@AfterClass	
 	public  void closeBrowser() {
 		driver.quit();
+	}
+	
+	@DataProvider(name="TestCaseData")
+	public Object[][] excelData() {
+		Object[][] values = ExcelReader.getValueFromExcel(excelFileName);
+		return values;
+		
 	}
 }
